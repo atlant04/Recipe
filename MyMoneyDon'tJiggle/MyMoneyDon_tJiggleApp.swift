@@ -9,9 +9,22 @@ import SwiftUI
 
 @main
 struct MyMoneyDon_tJiggleApp: App {
+    @StateObject var store = ProductStore()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TabView {
+                AddProductSetView()
+                    .tabItem {
+                        Label("Продукты", systemImage: "bag")
+                    }
+                
+                ProductBank()
+                    .tabItem {
+                        Label("Банк", systemImage: "lock")
+                    }
+                
+            }
+            .environmentObject(store)
         }
     }
 }

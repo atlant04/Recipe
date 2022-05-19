@@ -7,16 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F7617D172836A8CA00A6439E /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7617D162836A8CA00A6439E /* CurrencyTextField.swift */; };
+		F7617D1B2836C9A900A6439E /* ProductBankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7617D1A2836C9A900A6439E /* ProductBankView.swift */; };
 		F783EFB128358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F783EFB028358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift */; };
-		F783EFB328358502006EA1B7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F783EFB228358502006EA1B7 /* ContentView.swift */; };
+		F783EFB328358502006EA1B7 /* AddProductSetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F783EFB228358502006EA1B7 /* AddProductSetView.swift */; };
 		F783EFB528358502006EA1B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F783EFB428358502006EA1B7 /* Assets.xcassets */; };
 		F783EFB828358502006EA1B7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F783EFB728358502006EA1B7 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F7617D162836A8CA00A6439E /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
+		F7617D1A2836C9A900A6439E /* ProductBankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductBankView.swift; sourceTree = "<group>"; };
 		F783EFAD28358502006EA1B7 /* MyMoneyDon'tJiggle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MyMoneyDon'tJiggle.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F783EFB028358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMoneyDon_tJiggleApp.swift; sourceTree = "<group>"; };
-		F783EFB228358502006EA1B7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F783EFB228358502006EA1B7 /* AddProductSetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProductSetView.swift; sourceTree = "<group>"; };
 		F783EFB428358502006EA1B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F783EFB728358502006EA1B7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F783EFB928358502006EA1B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -53,7 +57,9 @@
 			isa = PBXGroup;
 			children = (
 				F783EFB028358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift */,
-				F783EFB228358502006EA1B7 /* ContentView.swift */,
+				F783EFB228358502006EA1B7 /* AddProductSetView.swift */,
+				F7617D1A2836C9A900A6439E /* ProductBankView.swift */,
+				F7617D162836A8CA00A6439E /* CurrencyTextField.swift */,
 				F783EFB428358502006EA1B7 /* Assets.xcassets */,
 				F783EFB928358502006EA1B7 /* Info.plist */,
 				F783EFB628358502006EA1B7 /* Preview Content */,
@@ -138,7 +144,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F783EFB328358502006EA1B7 /* ContentView.swift in Sources */,
+				F7617D1B2836C9A900A6439E /* ProductBankView.swift in Sources */,
+				F7617D172836A8CA00A6439E /* CurrencyTextField.swift in Sources */,
+				F783EFB328358502006EA1B7 /* AddProductSetView.swift in Sources */,
 				F783EFB128358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
