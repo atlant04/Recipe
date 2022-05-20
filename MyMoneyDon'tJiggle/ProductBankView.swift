@@ -27,7 +27,7 @@ struct ProductBank: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: 8)
                         .strokeBorder(style: .init(lineWidth: 4, dash: [10], dashPhase: x))
-                        .padding()
+                        .padding() 
                     Image(systemName: "photo.on.rectangle.angled")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
