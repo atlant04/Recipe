@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE2BC06A2837B23400A3DBEA /* ProductStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2BC0692837B23400A3DBEA /* ProductStore.swift */; };
+		CE2BC06C2837B3CC00A3DBEA /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2BC06B2837B3CC00A3DBEA /* ImagePicker.swift */; };
+		CE2BC06E2837B94100A3DBEA /* PriceSetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2BC06D2837B94100A3DBEA /* PriceSetView.swift */; };
+		CE2BC0702837BBFB00A3DBEA /* TextAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2BC06F2837BBFB00A3DBEA /* TextAlert.swift */; };
 		F7617D172836A8CA00A6439E /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7617D162836A8CA00A6439E /* CurrencyTextField.swift */; };
 		F7617D1B2836C9A900A6439E /* ProductBankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7617D1A2836C9A900A6439E /* ProductBankView.swift */; };
 		F783EFB128358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F783EFB028358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift */; };
@@ -16,6 +20,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CE2BC0692837B23400A3DBEA /* ProductStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStore.swift; sourceTree = "<group>"; };
+		CE2BC06B2837B3CC00A3DBEA /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		CE2BC06D2837B94100A3DBEA /* PriceSetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceSetView.swift; sourceTree = "<group>"; };
+		CE2BC06F2837BBFB00A3DBEA /* TextAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAlert.swift; sourceTree = "<group>"; };
 		F7617D162836A8CA00A6439E /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
 		F7617D1A2836C9A900A6439E /* ProductBankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductBankView.swift; sourceTree = "<group>"; };
 		F783EFAD28358502006EA1B7 /* MyMoneyDon'tJiggle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MyMoneyDon'tJiggle.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +66,10 @@
 			children = (
 				F783EFB028358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift */,
 				F783EFB228358502006EA1B7 /* AddProductSetView.swift */,
+				CE2BC06D2837B94100A3DBEA /* PriceSetView.swift */,
+				CE2BC0692837B23400A3DBEA /* ProductStore.swift */,
+				CE2BC06B2837B3CC00A3DBEA /* ImagePicker.swift */,
+				CE2BC06F2837BBFB00A3DBEA /* TextAlert.swift */,
 				F7617D1A2836C9A900A6439E /* ProductBankView.swift */,
 				F7617D162836A8CA00A6439E /* CurrencyTextField.swift */,
 				F783EFB428358502006EA1B7 /* Assets.xcassets */,
@@ -144,10 +156,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE2BC06A2837B23400A3DBEA /* ProductStore.swift in Sources */,
 				F7617D1B2836C9A900A6439E /* ProductBankView.swift in Sources */,
 				F7617D172836A8CA00A6439E /* CurrencyTextField.swift in Sources */,
+				CE2BC06C2837B3CC00A3DBEA /* ImagePicker.swift in Sources */,
+				CE2BC06E2837B94100A3DBEA /* PriceSetView.swift in Sources */,
 				F783EFB328358502006EA1B7 /* AddProductSetView.swift in Sources */,
 				F783EFB128358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift in Sources */,
+				CE2BC0702837BBFB00A3DBEA /* TextAlert.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

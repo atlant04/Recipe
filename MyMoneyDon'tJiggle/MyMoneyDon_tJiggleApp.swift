@@ -23,6 +23,11 @@ struct MyMoneyDon_tJiggleApp: App {
                         Label("Банк", systemImage: "lock")
                     }
                 
+                PriceSetView()
+                    .tabItem {
+                        Label("Цены", systemImage: "dollarsign.circle")
+                    }
+                
             }
             .environmentObject(store)
         }
