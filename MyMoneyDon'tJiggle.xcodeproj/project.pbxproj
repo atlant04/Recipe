@@ -11,10 +11,14 @@
 		CE2BC06C2837B3CC00A3DBEA /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2BC06B2837B3CC00A3DBEA /* ImagePicker.swift */; };
 		CE2BC06E2837B94100A3DBEA /* PriceSetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2BC06D2837B94100A3DBEA /* PriceSetView.swift */; };
 		CE2BC0702837BBFB00A3DBEA /* TextAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2BC06F2837BBFB00A3DBEA /* TextAlert.swift */; };
+		CE36D5A9283A9D2F005C84F8 /* ProductSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE36D5A8283A9D2F005C84F8 /* ProductSelector.swift */; };
+		CE36D5AB283BE6EF005C84F8 /* RecipeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE36D5AA283BE6EF005C84F8 /* RecipeListView.swift */; };
+		CE36D5AD283BE9B7005C84F8 /* RecipeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE36D5AC283BE9B7005C84F8 /* RecipeDetailView.swift */; };
+		CE36D5AF283E656C005C84F8 /* PriceSetSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE36D5AE283E656C005C84F8 /* PriceSetSelectionView.swift */; };
 		F7617D172836A8CA00A6439E /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7617D162836A8CA00A6439E /* CurrencyTextField.swift */; };
 		F7617D1B2836C9A900A6439E /* ProductBankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7617D1A2836C9A900A6439E /* ProductBankView.swift */; };
 		F783EFB128358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F783EFB028358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift */; };
-		F783EFB328358502006EA1B7 /* AddProductSetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F783EFB228358502006EA1B7 /* AddProductSetView.swift */; };
+		F783EFB328358502006EA1B7 /* PriceSetConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F783EFB228358502006EA1B7 /* PriceSetConfigView.swift */; };
 		F783EFB528358502006EA1B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F783EFB428358502006EA1B7 /* Assets.xcassets */; };
 		F783EFB828358502006EA1B7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F783EFB728358502006EA1B7 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -24,11 +28,15 @@
 		CE2BC06B2837B3CC00A3DBEA /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		CE2BC06D2837B94100A3DBEA /* PriceSetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceSetView.swift; sourceTree = "<group>"; };
 		CE2BC06F2837BBFB00A3DBEA /* TextAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAlert.swift; sourceTree = "<group>"; };
+		CE36D5A8283A9D2F005C84F8 /* ProductSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelector.swift; sourceTree = "<group>"; };
+		CE36D5AA283BE6EF005C84F8 /* RecipeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListView.swift; sourceTree = "<group>"; };
+		CE36D5AC283BE9B7005C84F8 /* RecipeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailView.swift; sourceTree = "<group>"; };
+		CE36D5AE283E656C005C84F8 /* PriceSetSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceSetSelectionView.swift; sourceTree = "<group>"; };
 		F7617D162836A8CA00A6439E /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
 		F7617D1A2836C9A900A6439E /* ProductBankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductBankView.swift; sourceTree = "<group>"; };
 		F783EFAD28358502006EA1B7 /* MyMoneyDon'tJiggle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MyMoneyDon'tJiggle.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F783EFB028358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMoneyDon_tJiggleApp.swift; sourceTree = "<group>"; };
-		F783EFB228358502006EA1B7 /* AddProductSetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProductSetView.swift; sourceTree = "<group>"; };
+		F783EFB228358502006EA1B7 /* PriceSetConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceSetConfigView.swift; sourceTree = "<group>"; };
 		F783EFB428358502006EA1B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F783EFB728358502006EA1B7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F783EFB928358502006EA1B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -65,11 +73,15 @@
 			isa = PBXGroup;
 			children = (
 				F783EFB028358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift */,
-				F783EFB228358502006EA1B7 /* AddProductSetView.swift */,
+				F783EFB228358502006EA1B7 /* PriceSetConfigView.swift */,
 				CE2BC06D2837B94100A3DBEA /* PriceSetView.swift */,
 				CE2BC0692837B23400A3DBEA /* ProductStore.swift */,
 				CE2BC06B2837B3CC00A3DBEA /* ImagePicker.swift */,
 				CE2BC06F2837BBFB00A3DBEA /* TextAlert.swift */,
+				CE36D5AC283BE9B7005C84F8 /* RecipeDetailView.swift */,
+				CE36D5AE283E656C005C84F8 /* PriceSetSelectionView.swift */,
+				CE36D5AA283BE6EF005C84F8 /* RecipeListView.swift */,
+				CE36D5A8283A9D2F005C84F8 /* ProductSelector.swift */,
 				F7617D1A2836C9A900A6439E /* ProductBankView.swift */,
 				F7617D162836A8CA00A6439E /* CurrencyTextField.swift */,
 				F783EFB428358502006EA1B7 /* Assets.xcassets */,
@@ -158,10 +170,14 @@
 			files = (
 				CE2BC06A2837B23400A3DBEA /* ProductStore.swift in Sources */,
 				F7617D1B2836C9A900A6439E /* ProductBankView.swift in Sources */,
+				CE36D5AF283E656C005C84F8 /* PriceSetSelectionView.swift in Sources */,
+				CE36D5AB283BE6EF005C84F8 /* RecipeListView.swift in Sources */,
 				F7617D172836A8CA00A6439E /* CurrencyTextField.swift in Sources */,
 				CE2BC06C2837B3CC00A3DBEA /* ImagePicker.swift in Sources */,
+				CE36D5A9283A9D2F005C84F8 /* ProductSelector.swift in Sources */,
 				CE2BC06E2837B94100A3DBEA /* PriceSetView.swift in Sources */,
-				F783EFB328358502006EA1B7 /* AddProductSetView.swift in Sources */,
+				CE36D5AD283BE9B7005C84F8 /* RecipeDetailView.swift in Sources */,
+				F783EFB328358502006EA1B7 /* PriceSetConfigView.swift in Sources */,
 				F783EFB128358502006EA1B7 /* MyMoneyDon_tJiggleApp.swift in Sources */,
 				CE2BC0702837BBFB00A3DBEA /* TextAlert.swift in Sources */,
 			);
@@ -221,7 +237,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -276,7 +292,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -293,9 +309,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"MyMoneyDon'tJiggle/Preview Content\"";
+				DEVELOPMENT_TEAM = ZF27C7P399;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "MyMoneyDon'tJiggle/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -314,9 +331,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"MyMoneyDon'tJiggle/Preview Content\"";
+				DEVELOPMENT_TEAM = ZF27C7P399;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "MyMoneyDon'tJiggle/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

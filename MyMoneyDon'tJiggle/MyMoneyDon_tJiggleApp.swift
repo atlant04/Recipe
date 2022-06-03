@@ -13,11 +13,11 @@ struct MyMoneyDon_tJiggleApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                AddProductSetView()
+                RecipeListView()
                     .tabItem {
-                        Label("Продукты", systemImage: "bag")
+                        Label("Рецепты", systemImage: "list.bullet.rectangle")
                     }
-                
+
                 ProductBank()
                     .tabItem {
                         Label("Банк", systemImage: "lock")
@@ -25,7 +25,7 @@ struct MyMoneyDon_tJiggleApp: App {
                 
                 PriceSetView()
                     .tabItem {
-                        Label("Цены", systemImage: "dollarsign.circle")
+                        Label("Наборы цен", systemImage: "dollarsign.circle")
                     }
                 
             }

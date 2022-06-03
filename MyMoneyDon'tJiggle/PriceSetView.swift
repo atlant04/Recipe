@@ -11,10 +11,11 @@ struct PriceSetView: View {
     @EnvironmentObject var store: ProductStore
     @State private var showAlert = false
     @State private var newSetName: String? = ""
+    
     var body: some View {
         NavigationView {
-            List(store.priceSets, id: \.self) { priceSet in
-                NavigationLink(destination: Text("Hello")) {
+            List($store.priceSets) { $priceSet in
+                NavigationLink(destination: PriceSetConfigView(priceSet: $priceSet)) {
                     Text(priceSet.name)
                 }
             }
@@ -26,7 +27,7 @@ struct PriceSetView: View {
             .textFieldAlert(isPresented: $showAlert, content: {
                 TextFieldAlert(alert: TextAlert(title: "Добавить новый набор цен", message: "", action: addNewPriceSet), text: $newSetName)
             })
-            .navigationTitle("Цены")
+            .navigationTitle("Наборы Цен")
         }
     }
     

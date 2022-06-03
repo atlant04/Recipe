@@ -18,7 +18,7 @@ struct ProductBank: View {
     var body: some View {
         NavigationView {
             VStack {
-                List(store.bank, id: \.self) { product in
+                List(store.productBank, id: \.self) { product in
                     HStack {
                         Group {
                             if case .system(let name) = product.icon {
