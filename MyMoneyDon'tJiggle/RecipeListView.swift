@@ -21,19 +21,57 @@ enum Unit: CaseIterable, CustomStringConvertible {
     
 }
 
-struct RecipeProduct: Hashable, Identifiable {
+class RecipeProduct: ObservableObject, Identifiable {
     let product: Product
-    var unit: Unit?
-    var amount: Double
+    @Published var unit: Unit?
+    @Published var amount: Double
     
-    var id = UUID().uuidString
+    let id = UUID().uuidString
+    
+    
+    internal init(product: Product, unit: Unit? = nil, amount: Double = 0.0) {
+        self.product = product
+        self.unit = unit
+        self.amount = amount
+    }
 }
 
-struct Recipe: Hashable, Identifiable {
+extension RecipeProduct: Hashable {
+    static func == (lhs: RecipeProduct, rhs: RecipeProduct) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    
+}
+
+class Recipe: ObservableObject, Identifiable {
     var name: String
-    var products: [RecipeProduct]
+    @Published var products: [RecipeProduct]
     let id = UUID().uuidString
     var priceSet: PriceSet?
+    
+    internal init(name: String, products: [RecipeProduct] = [], priceSet: PriceSet? = nil) {
+        self.name = name
+        self.products = products
+        self.priceSet = priceSet
+    }
+    
+}
+
+extension Recipe: Hashable {
+    static func == (lhs: Recipe, rhs: Recipe) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    
 }
 
 extension RecipeProduct: Comparable {
@@ -49,9 +87,9 @@ struct RecipeListView: View {
     @State private var newRecipeName: String?
     var body: some View {
         NavigationView {
-            List($store.recipeList) { $recipe in
+            List(store.recipeList) { recipe in
                 NavigationLink {
-                    RecipeDetailView(recipe: $recipe)
+                    RecipeDetailView(recipe: recipe)
                 } label: {
                     Text(recipe.name)
                 }

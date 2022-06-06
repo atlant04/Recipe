@@ -35,10 +35,9 @@ class CurrencyUITextField: UITextField {
         return text ?? ""
     }
     
-    func currency(from double: Double, using formatter: NumberFormatter) -> String {
+    func format(from double: Double, using formatter: Formatter) -> String {
         return formatter.string(for: double) ?? ""
     }
-
 }
 
 
@@ -67,24 +66,21 @@ extension Decimal {
 
 struct CurrencyTextField: UIViewRepresentable {
     typealias UIViewType = CurrencyUITextField
-    
-    @Binding var currency: Currency?
-    @Binding var value: Double
 
-    private var formatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.maximumFractionDigits = 2
-        formatter.locale = currency?.locale ?? Currency.rub.locale
-        return formatter
-    }
+    @Binding var value: Double
+    var alignment: NSTextAlignment = .right
+    
+    var digitsInFraction: Int = 2
+    var format: (Double) -> String = {_ in return "" }
+
 
     func makeUIView(context: Context) -> CurrencyUITextField {
         let textField = CurrencyUITextField()
+        textField.textAlignment = alignment
         textField.addTarget(context.coordinator, action: #selector(Coordinator.textFieldTextDidChange), for: .editingChanged)
         textField.addTarget(context.coordinator, action: #selector(Coordinator.resetSelection), for: .allTouchEvents)
         textField.onDeleteBackwards = context.coordinator.onDeleteBackwards
-        context.coordinator.reformatText(double: value, textField: textField, formatter: formatter)
+        context.coordinator.reformatText(double: value, textField: textField)
         context.coordinator.resetSelection(textField)
         textField.becomeFirstResponder() // when textField re-renders, it's not the first responder anymore, so we need to force it to become the first responder again, so the user doesn't have to select the text field after every entry, fuck me
         textField.keyboardType = .numberPad
@@ -92,7 +88,7 @@ struct CurrencyTextField: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: CurrencyUITextField, context: Context) {
-//        context.coordinator.reformatText(double: value, textField: uiView, formatter: formatter)
+        context.coordinator.reformatText(double: value, textField: uiView)
     }
     
     func makeCoordinator() -> Coordinator {
@@ -110,20 +106,20 @@ struct CurrencyTextField: UIViewRepresentable {
         @objc func textFieldTextDidChange(_ textField: CurrencyUITextField) {
             let decimal = textField.textValue
                 .decimal
-                .fraction(digits: currencyTextField.formatter.maximumFractionDigits)
+                .fraction(digits: currencyTextField.digitsInFraction)
                 .doubleValue
             
             currencyTextField.value = decimal
         }
         
-        func reformatText(double: Double, textField: CurrencyUITextField, formatter: NumberFormatter) {
-            textField.text = textField.currency(from: double, using: formatter)
+        func reformatText(double: Double, textField: CurrencyUITextField) {
+            textField.text = self.currencyTextField.format(double)
         }
         
         func onDeleteBackwards(_ textField: CurrencyUITextField) {
             let droppedDigits = textField.textValue.digits.dropLast().string
             let decimal = Decimal(string: droppedDigits)!
-                .fraction(digits: currencyTextField.formatter.maximumFractionDigits)
+                .fraction(digits: currencyTextField.digitsInFraction)
                 .doubleValue
             currencyTextField.value = decimal
         }

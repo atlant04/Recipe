@@ -14,8 +14,8 @@ struct PriceSetView: View {
     
     var body: some View {
         NavigationView {
-            List($store.priceSets) { $priceSet in
-                NavigationLink(destination: PriceSetConfigView(priceSet: $priceSet)) {
+            List(store.priceSets) { priceSet in
+                NavigationLink(destination: PriceSetConfigView(priceSet: priceSet)) {
                     Text(priceSet.name)
                 }
             }

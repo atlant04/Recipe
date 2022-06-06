@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import Combine
 
 enum Icon: Hashable {
     case system(String)
@@ -58,17 +58,64 @@ enum Currency: String, CaseIterable, Identifiable, CustomStringConvertible {
 }
 
 
-struct PriceSet: Hashable, Identifiable {
+class PriceSet: ObservableObject, Identifiable {
     let name: String
-    var prices: [ProductPrice]
-    var currency: Currency?
     let id = UUID().uuidString
+    @Published var prices: [ProductPrice]
+    @Published var currency: Currency? = .rub
+    
+    var cancellable: AnyCancellable?
+    internal init(name: String, prices: [ProductPrice] = [], currency: Currency? = .rub) {
+        self.name = name
+        self.prices = prices
+        self.currency = currency
+        cancellable = self.objectWillChange.sink {
+            print(dump(self))
+        }
+    }
 }
 
-struct ProductPrice: Hashable {
+extension PriceSet: Hashable {
+    static func == (lhs: PriceSet, rhs: PriceSet) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+class ProductPrice: ObservableObject, Identifiable {
+    internal init(product: Product) {
+        self.product = product
+    }
+    
+//    internal init(product: Product) {
+//        self.product = product
+//        self.price = 0.0
+//    }
+//
+//    internal init(product: Product, price: Double) {
+//        self.product = product
+//        self.price = price
+//    }
+    
     var product: Product
-    var price: Double {
-        didSet {print(price)}
+    var id: String = UUID().uuidString
+    @Published var price: Double = 0.0
+    @Published var quantity: Double = 0.0
+    @Published var unit: Unit?
+
+}
+
+extension ProductPrice: Hashable{
+    static func == (lhs: ProductPrice, rhs: ProductPrice) -> Bool {
+        lhs.id == rhs.id 
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(product)
+        hasher.combine(price)
     }
 }
 
@@ -100,13 +147,14 @@ final class ProductStore: ObservableObject {
         
         self.priceSets = [
             PriceSet(name: "First", prices: [
-                ProductPrice(product: productBank.randomElement()!, price: Double.random(in: 0.0 ... 1.0)),
+                ProductPrice(product: productBank.randomElement()!),
+                ProductPrice(product: productBank.randomElement()!),
             ]),
             PriceSet(name: "Second", prices: [
-                ProductPrice(product: productBank.randomElement()!, price: Double.random(in: 0.0 ... 1.0)),
+                ProductPrice(product: productBank.randomElement()!),
             ]),
             PriceSet(name: "Third", prices: [
-                ProductPrice(product: productBank.randomElement()!, price: Double.random(in: 0.0 ... 1.0)),
+                ProductPrice(product: productBank.randomElement()!),
             ]),
         ]
     }

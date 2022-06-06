@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RecipeDetailView: View {
     @EnvironmentObject var store: ProductStore
-    @Binding var recipe: Recipe
+    @ObservedObject var recipe: Recipe
     @State private var isProductSelectorShowing = false
     @State private var showPriceSetSelection = false
     @FocusState var focused: Bool
@@ -51,17 +51,32 @@ struct RecipeDetailView: View {
             return partialResult + (recipeProduct.amount * productPrice.price)
         }
     }
+    
+    private func background(for recipeProduct: RecipeProduct) -> Color {
+        guard let priceSet = recipe.priceSet else { return Color.red }
+        
+        if priceSet.prices.contains(where: {
+            $0.product == recipeProduct.product
+        }) {
+            return Color.green
+        } else {
+            return Color.red
+        }
+        
+    }
     var body: some View {
         ZStack(alignment: .bottomTrailing){
             VStack {
-                ForEach($recipe.products) { $recipeProduct in
-                    RecipeProductRow(recipeProduct: $recipeProduct,
+                ForEach(recipe.products) { recipeProduct in
+                    RecipeProductRow(recipeProduct: recipeProduct,
                                      focus: _focused)
+            
+                    .background(background(for: recipeProduct))
                 }
                 RecipeDetailViewSelectorButtons(
                     isProductSelectorShowing: $isProductSelectorShowing,
                     showPriceSetSelection: $showPriceSetSelection,
-                    recipe: $recipe
+                    recipe: recipe
                 )
                 Spacer()
             }
@@ -84,11 +99,14 @@ struct RecipeDetailView: View {
             focused = false
         }
         .navigationTitle(recipe.name)
+        .onChange(of: recipe) { newValue in
+            print(newValue.priceSet)
+        }
     }
 }
 
 struct RecipeProductRow: View {
-    @Binding var recipeProduct: RecipeProduct
+    @ObservedObject var recipeProduct: RecipeProduct
     @FocusState var focus: Bool
     
     var body: some View {
@@ -115,15 +133,15 @@ struct RecipeProductRow: View {
 struct RecipeDetailView_Previews: PreviewProvider {
     
     static var previews: some View {
-        RecipeDetailView(recipe: .constant(Recipe(name: "Example", products: [
-            RecipeProduct(product: Product(icon: .system("plus"), name: "example"), unit: .grams, amount: 200)])))
+        RecipeDetailView(recipe: Recipe(name: "Example", products: [
+            RecipeProduct(product: Product(icon: .system("plus"), name: "example"), unit: .grams, amount: 200)]))
     }
 }
 
 struct RecipeDetailViewSelectorButtons: View {
     @Binding var isProductSelectorShowing: Bool
     @Binding var showPriceSetSelection: Bool
-    @Binding var recipe: Recipe
+    @ObservedObject var recipe: Recipe
     
     private var selectPriceSetButtonLabel: String {
         if let priceSet = recipe.priceSet {
