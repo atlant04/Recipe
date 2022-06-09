@@ -53,15 +53,20 @@ struct RecipeDetailView: View {
     }
     
     private func background(for recipeProduct: RecipeProduct) -> Color {
-        guard let priceSet = recipe.priceSet else { return Color.red }
+        //check priseSet is selected for current recipe
+        guard let priceSet = recipe.priceSet else { return .red }
         
-        if priceSet.prices.contains(where: {
+        // find price for the given product from the priceSet, return red if not found
+        guard let productPrice = priceSet.prices.first(where: {
             $0.product == recipeProduct.product
-        }) {
-            return Color.green
-        } else {
-            return Color.red
+        }) else { return .red }
+        
+        // if price for a product is not valid, return red
+        if !productPrice.isValid {
+            return .red
         }
+    
+        return Color.green
         
     }
     var body: some View {

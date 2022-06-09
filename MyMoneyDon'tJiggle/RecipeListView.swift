@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import Combine
 
 enum Unit: CaseIterable, CustomStringConvertible {
     case kilo, grams, unit
@@ -52,12 +52,27 @@ class Recipe: ObservableObject, Identifiable {
     var name: String
     @Published var products: [RecipeProduct]
     let id = UUID().uuidString
-    var priceSet: PriceSet?
+    @Published var priceSet: PriceSet?
+    
+    
+    private var bag = Set<AnyCancellable>()
+    private var previousSubscription: AnyCancellable?
     
     internal init(name: String, products: [RecipeProduct] = [], priceSet: PriceSet? = nil) {
         self.name = name
         self.products = products
         self.priceSet = priceSet
+        
+        // nasty, nasty workaround
+        $priceSet.sink { [unowned self] priceSet in
+            if let previousSubscription = previousSubscription {
+                bag.remove(previousSubscription)
+            }
+            previousSubscription = priceSet?.objectWillChange.sink {
+                self.objectWillChange.send()
+            }
+        }
+        .store(in: &bag)
     }
     
 }

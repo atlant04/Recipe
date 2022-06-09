@@ -65,13 +65,22 @@ class PriceSet: ObservableObject, Identifiable {
     @Published var currency: Currency? = .rub
     
     var cancellable: AnyCancellable?
+    var bag = Set<AnyCancellable>()
     internal init(name: String, prices: [ProductPrice] = [], currency: Currency? = .rub) {
         self.name = name
         self.prices = prices
         self.currency = currency
-        cancellable = self.objectWillChange.sink {
-            print(dump(self))
+        
+        // this is just unacceptable
+        $prices.sink { [unowned self] newPrices in
+            let objectWillChangeList = newPrices.map(\.objectWillChange)
+            Publishers.MergeMany(objectWillChangeList)
+                .sink { _ in
+                    self.objectWillChange.send()
+                }
+                .store(in: &bag)
         }
+        .store(in: &bag)
     }
 }
 
@@ -105,6 +114,10 @@ class ProductPrice: ObservableObject, Identifiable {
     @Published var price: Double = 0.0
     @Published var quantity: Double = 0.0
     @Published var unit: Unit?
+    
+    var isValid: Bool {
+        quantity > 0.0 && unit != nil
+    }
 
 }
 
