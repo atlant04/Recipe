@@ -52,40 +52,92 @@ struct RecipeDetailView: View {
         }
     }
     
-    private func background(for recipeProduct: RecipeProduct) -> Color {
+    enum RecipeProductValidity {
+        case noPriceSetIsSelected
+        case productIsMissingInPriceSet
+        case productPriceIsInvalid
+        case mismatchedUnits
+        case valid
+        
+        var validityDescription: String {
+            switch self {
+            case .noPriceSetIsSelected:
+                return "Не выбран набор цен"
+            case .productIsMissingInPriceSet:
+                return "Этот продукт не входит в выбранный набор цен"
+            case .productPriceIsInvalid:
+                return "Не действительная цена продукта в выбранном наборе цен"
+            case .mismatchedUnits:
+                return "Единицы измерения в ценновом наборе и в этом продукте отличаются"
+            case .valid:
+                return "Все ОК"
+            }
+        }
+    }
+    
+    private func checkValidity(for recipeProduct: RecipeProduct) -> RecipeProductValidity {
         //check priseSet is selected for current recipe
-        guard let priceSet = recipe.priceSet else { return .red }
+        guard let priceSet = recipe.priceSet else { return .noPriceSetIsSelected }
         
         // find price for the given product from the priceSet, return red if not found
         guard let productPrice = priceSet.prices.first(where: {
             $0.product == recipeProduct.product
-        }) else { return .red }
+        }) else { return .productIsMissingInPriceSet }
         
         // if price for a product is not valid, return red
         if !productPrice.isValid {
-            return .red
+            return .productPriceIsInvalid
+        }
+        
+        if recipeProduct.unit != productPrice.unit {
+            return .mismatchedUnits
         }
     
-        return Color.green
+        return .valid
         
     }
     var body: some View {
         ZStack(alignment: .bottomTrailing){
-            VStack {
-                ForEach(recipe.products) { recipeProduct in
-                    RecipeProductRow(recipeProduct: recipeProduct,
-                                     focus: _focused)
-            
-                    .background(background(for: recipeProduct))
+            ScrollView {
+                VStack {
+                    ForEach(recipe.products) { recipeProduct in
+                        let validity = checkValidity(for: recipeProduct)
+                        VStack {
+                            RecipeProductRow(recipeProduct: recipeProduct,
+                                             focus: _focused)
+                            
+                            if validity != .valid {
+                                HStack {
+                                    Image(systemName: "info.circle")
+                                        .resizable()
+                                    .frame(width: 16, height: 16)
+                                    Text(validity.validityDescription)
+                                    Spacer()
+                                }
+                                .padding(4)
+                            }
+                        }
+                        .background(validity == .valid ? .green : .red)
+                    }
+                    VStack(alignment: .leading, spacing: 0){
+                        Text("Описание")
+                            .font(.title)
+                            .fontWeight(.medium)
+                        TextEditor(text: $recipe.recipeDescription)
+                            .foregroundColor(.secondary)
+                        .frame(minHeight: 200)
+                    }
+                    .padding(.horizontal)
+                    RecipeDetailViewSelectorButtons(
+                        isProductSelectorShowing: $isProductSelectorShowing,
+                        showPriceSetSelection: $showPriceSetSelection,
+                        recipe: recipe
+                    )
+                    Spacer()
                 }
-                RecipeDetailViewSelectorButtons(
-                    isProductSelectorShowing: $isProductSelectorShowing,
-                    showPriceSetSelection: $showPriceSetSelection,
-                    recipe: recipe
-                )
-                Spacer()
             }
-            if recipe.priceSet != nil {
+            .padding(.bottom, 64)
+            if let totalPrice = recipe.priceSet?.totalPrice(for: recipe.products) {
                 Text("Всего: " + (formatter.string(for: totalPrice) ?? ""))
                     .font(.largeTitle)
                     .padding()
@@ -104,9 +156,6 @@ struct RecipeDetailView: View {
             focused = false
         }
         .navigationTitle(recipe.name)
-        .onChange(of: recipe) { newValue in
-            print(newValue.priceSet)
-        }
     }
 }
 

@@ -53,6 +53,7 @@ class Recipe: ObservableObject, Identifiable {
     @Published var products: [RecipeProduct]
     let id = UUID().uuidString
     @Published var priceSet: PriceSet?
+    @Published var recipeDescription: String = ""
     
     
     private var bag = Set<AnyCancellable>()
@@ -73,6 +74,16 @@ class Recipe: ObservableObject, Identifiable {
             }
         }
         .store(in: &bag)
+    
+        
+        $products.sink { [unowned self] newProducts in
+            let objectWillChangeLists = newProducts.map(\.objectWillChange)
+            Publishers.MergeMany(objectWillChangeLists)
+                .sink { _ in
+                    self.objectWillChange.send()
+                }
+                .store(in: &bag)
+        }.store(in: &bag)
     }
     
 }

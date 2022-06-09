@@ -71,7 +71,7 @@ class PriceSet: ObservableObject, Identifiable {
         self.prices = prices
         self.currency = currency
         
-        // this is just unacceptable
+        // this is just unacceptable, plus its leaking memory
         $prices.sink { [unowned self] newPrices in
             let objectWillChangeList = newPrices.map(\.objectWillChange)
             Publishers.MergeMany(objectWillChangeList)
@@ -81,6 +81,21 @@ class PriceSet: ObservableObject, Identifiable {
                 .store(in: &bag)
         }
         .store(in: &bag)
+    }
+    
+    func totalPrice(for products: [RecipeProduct]) -> Double? {
+        var totalPrice = 0.0
+        for product in products {
+            guard let productPrice = self.prices.first(where: { $0.product == product.product })
+            else { return nil }
+            
+            if product.unit != productPrice.unit { return nil }
+            if !productPrice.isValid { return nil }
+            
+            totalPrice += productPrice.pricePerUnit * product.amount
+        }
+        
+        return totalPrice
     }
 }
 
@@ -117,6 +132,10 @@ class ProductPrice: ObservableObject, Identifiable {
     
     var isValid: Bool {
         quantity > 0.0 && unit != nil
+    }
+    
+    var pricePerUnit: Double {
+        return price / quantity
     }
 
 }
