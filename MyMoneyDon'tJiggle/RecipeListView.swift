@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-enum Unit: CaseIterable, CustomStringConvertible {
+enum Unit: CaseIterable, CustomStringConvertible, Codable {
     case kilo, grams, unit
     
     var description: String {
@@ -21,7 +21,7 @@ enum Unit: CaseIterable, CustomStringConvertible {
     
 }
 
-class RecipeProduct: ObservableObject, Identifiable, ProductProvider, CustomStringConvertible {
+class RecipeProduct: ObservableObject, Identifiable, ProductProvider, CustomStringConvertible, Codable {
     var description: String {
         return product.description
     }
@@ -44,6 +44,21 @@ class RecipeProduct: ObservableObject, Identifiable, ProductProvider, CustomStri
         self.unit = unit
         self.amount = amount
     }
+    
+    func encode(to encoder: Encoder) throws {
+        
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case product, unit, amount
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.product = try container.decode(Product.self, forKey: .product)
+        self.unit = try container.decodeIfPresent(Unit.self, forKey: .unit)
+        self.amount = try container.decode(Double.self, forKey: .amount)
+    }
 }
 
 extension RecipeProduct: Hashable {
@@ -58,10 +73,10 @@ extension RecipeProduct: Hashable {
     
 }
 
-class Recipe: ObservableObject, Identifiable {
+class Recipe: ObservableObject, Identifiable, Codable {
     var name: String
     @Published var products: Set<RecipeProduct>
-    let id = UUID().uuidString
+    var id = UUID().uuidString
     @Published var priceSet: PriceSet?
     @Published var recipeDescription: String = ""
     @Published var unitsMade: Int = 1
@@ -97,6 +112,24 @@ class Recipe: ObservableObject, Identifiable {
         }.store(in: &bag)
     }
     
+    
+    func encode(to encoder: Encoder) throws {
+        
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case name, products, id, priceSet, recipeDescription, unitsMade
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.products = try container.decode(Set<RecipeProduct>.self, forKey: .products)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.priceSet = try container.decodeIfPresent(PriceSet.self, forKey: .priceSet)
+        self.recipeDescription = try container.decode(String.self, forKey: .recipeDescription)
+        self.unitsMade = try container.decode(Int.self, forKey: .unitsMade)
+    }
 }
 
 extension Recipe: Hashable {

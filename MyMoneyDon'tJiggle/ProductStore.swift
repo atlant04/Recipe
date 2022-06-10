@@ -8,18 +8,26 @@
 import SwiftUI
 import Combine
 
-enum Icon: Hashable {
+enum Icon: Hashable, Codable {
     case system(String)
     case image(UIImage)
+    
+    func encode(to encoder: Encoder) throws {
+        
+    }
+    
+    init(from decoder: Decoder) throws {
+        self = .system("asd")
+    }
 }
 
 extension Product: CustomStringConvertible {
     var description: String { name }
 }
-struct Product: Hashable, Identifiable {
+struct Product: Hashable, Identifiable, Codable {
     let icon: Icon
     let name: String
-    let id = UUID().uuidString
+    var id = UUID().uuidString
 }
 
 extension Product: Comparable {
@@ -29,7 +37,7 @@ extension Product: Comparable {
 
 }
 
-enum Currency: String, CaseIterable, Identifiable, CustomStringConvertible {
+enum Currency: String, CaseIterable, Identifiable, CustomStringConvertible, Codable {
     var description: String {
         return self.symbol
     }
@@ -58,7 +66,7 @@ enum Currency: String, CaseIterable, Identifiable, CustomStringConvertible {
 }
 
 
-class PriceSet: ObservableObject, Identifiable {
+class PriceSet: ObservableObject, Identifiable, Codable {
     let name: String
     let id = UUID().uuidString
     @Published var prices: Set<ProductPrice>
@@ -96,6 +104,15 @@ class PriceSet: ObservableObject, Identifiable {
         }
         
         return totalPrice
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        
+    }
+    
+    required init(from decoder: Decoder) throws {
+        self.name = ""
+        self.prices = Set()
     }
 }
 
@@ -161,7 +178,7 @@ extension PriceSet: Comparable {
     }
     
 }
-final class ProductStore: ObservableObject {
+final class ProductStore: ObservableObject, Codable {
     @Published var currentCurrency: Currency?
     @Published var productBank: [Product] = []
     @Published var priceSets: [PriceSet] = []
@@ -201,5 +218,21 @@ final class ProductStore: ObservableObject {
     
     func addNewPriceSet(_ name: String) {
         priceSets.append(PriceSet(name: name, prices: []))
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case currentCurrency, productBank, priceSets, recipeList
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.currentCurrency = try container.decodeIfPresent(Currency.self, forKey: .currentCurrency)
+        self.productBank = try container.decode([Product].self, forKey: .productBank)
+        self.priceSets = try container.decode([PriceSet].self, forKey: .priceSets)
+        self.recipeList = try container.decode([Recipe].self, forKey: .recipeList)
     }
 }
