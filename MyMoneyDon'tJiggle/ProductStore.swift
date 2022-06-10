@@ -13,8 +13,8 @@ enum Icon: Hashable, Codable {
     case image(UIImage)
     
     func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(self)
+//        var container = encoder.singleValueContainer()
+//        try container.encode(self)
     }
     
     init(from decoder: Decoder) throws {
@@ -80,6 +80,10 @@ class PriceSet: ObservableObject, Identifiable, Codable {
         self.prices = Set(prices)
         self.currency = currency
         
+        registerObservers()
+    }
+    
+    private func registerObservers() {
         // this is just unacceptable, plus its leaking memory
         $prices.sink { [unowned self] newPrices in
             let objectWillChangeList = newPrices.map(\.objectWillChange)
@@ -108,7 +112,11 @@ class PriceSet: ObservableObject, Identifiable, Codable {
     }
     
     func encode(to encoder: Encoder) throws {
-        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(id, forKey: .id)
+        try container.encode(prices, forKey: .prices)
+        try container.encode(currency, forKey: .currency)
     }
     
     enum CodingKeys: String, CodingKey {
@@ -121,6 +129,8 @@ class PriceSet: ObservableObject, Identifiable, Codable {
         self.prices = try container.decode(Set<ProductPrice>.self, forKey: .prices)
         self.currency = try container.decodeIfPresent(Currency.self, forKey: .currency)
         self.id = try container.decode(String.self, forKey: .id)
+        
+        registerObservers()
     }
 }
 
@@ -154,7 +164,12 @@ class ProductPrice: ObservableObject, Identifiable, ProductProvider, Codable {
     }
     
     func encode(to encoder: Encoder) throws {
-        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(product, forKey: .product)
+        try container.encode(id, forKey: .id)
+        try container.encode(price, forKey: .price)
+        try container.encode(quantity, forKey: .quantity)
+        try container.encode(unit, forKey: .unit)
     }
     
     enum CodingKeys: String, CodingKey {
@@ -166,7 +181,7 @@ class ProductPrice: ObservableObject, Identifiable, ProductProvider, Codable {
         self.product = try container.decode(Product.self, forKey: .product)
         self.id = try container.decode(String.self, forKey: .id)
         self.quantity = try container.decode(Double.self, forKey: .quantity)
-        self.unit = try container.decode(Unit.self, forKey: .unit)
+        self.unit = try container.decodeIfPresent(Unit.self, forKey: .unit)
         self.price = try container.decode(Double.self, forKey: .price)
     }
 
@@ -264,51 +279,4 @@ final class ProductStore: ObservableObject, Codable {
         self.priceSets = try container.decode([PriceSet].self, forKey: .priceSets)
         self.recipeList = try container.decode([Recipe].self, forKey: .recipeList)
     }
-    
-    private static func fileURL() throws -> URL {
-        try FileManager.default.url(for: .documentDirectory,
-                                    in: .userDomainMask,
-                                    appropriateFor: nil,
-                                    create: false)
-        .appendingPathComponent("product_store.data")
-    }
-    
-    static func load(completion: @escaping (Result<ProductStore, Error>)->Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            do {
-                let fileURL = try fileURL()
-                guard let file = try? FileHandle(forReadingFrom: fileURL) else {
-                    DispatchQueue.main.async {
-                        completion(.success(ProductStore()))
-                    }
-                    return
-                }
-                let dailyScrums = try JSONDecoder().decode(ProductStore.self, from: file.availableData)
-                DispatchQueue.main.async {
-                    completion(.success(dailyScrums))
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-    
-    static func save(store: ProductStore, completion: @escaping (Result<Bool, Error>)->Void) {
-            DispatchQueue.global(qos: .background).async {
-                do {
-                    let data = try JSONEncoder().encode(store)
-                    let outfile = try fileURL()
-                    try data.write(to: outfile)
-                    DispatchQueue.main.async {
-                        completion(.success(true))
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        completion(.failure(error))
-                    }
-                }
-            }
-        }
 }

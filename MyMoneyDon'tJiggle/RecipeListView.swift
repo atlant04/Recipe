@@ -46,7 +46,10 @@ class RecipeProduct: ObservableObject, Identifiable, ProductProvider, CustomStri
     }
     
     func encode(to encoder: Encoder) throws {
-        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(product, forKey: .product)
+        try container.encode(amount, forKey: .amount)
+        try container.encode(unit, forKey: .unit)
     }
     
     enum CodingKeys: String, CodingKey {
@@ -81,6 +84,8 @@ class Recipe: ObservableObject, Identifiable, Codable {
     @Published var recipeDescription: String = ""
     @Published var unitsMade: Int = 1
     
+    @EnvironmentObject private var store: ProductStore
+    
     
     private var bag = Set<AnyCancellable>()
     private var previousSubscription: AnyCancellable?
@@ -90,6 +95,10 @@ class Recipe: ObservableObject, Identifiable, Codable {
         self.products = Set(products)
         self.priceSet = priceSet
         
+        registerObservers()
+    }
+    
+    private func registerObservers() {
         // nasty, nasty workaround
         $priceSet.sink { [unowned self] priceSet in
             if let previousSubscription = previousSubscription {
@@ -114,7 +123,13 @@ class Recipe: ObservableObject, Identifiable, Codable {
     
     
     func encode(to encoder: Encoder) throws {
-        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(products, forKey: .products)
+        try container.encode(id, forKey: .id)
+        try container.encode(priceSet, forKey: .priceSet)
+        try container.encode(recipeDescription, forKey: .recipeDescription)
+        try container.encode(unitsMade, forKey: .unitsMade)
     }
     
     enum CodingKeys: String, CodingKey {
@@ -129,6 +144,8 @@ class Recipe: ObservableObject, Identifiable, Codable {
         self.priceSet = try container.decodeIfPresent(PriceSet.self, forKey: .priceSet)
         self.recipeDescription = try container.decode(String.self, forKey: .recipeDescription)
         self.unitsMade = try container.decode(Int.self, forKey: .unitsMade)
+        
+        registerObservers()
     }
 }
 

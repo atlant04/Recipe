@@ -104,7 +104,7 @@ struct RecipeDetailView: View {
                             .padding(4)
                         }
                     }
-                    .background(validity == .valid ? .green : .red)
+                    .background(validity == .valid ? .green.opacity(0.8) : .red.opacity(0.8))
                 }
                 VStack(alignment: .leading, spacing: 0){
                     Text("Описание")
