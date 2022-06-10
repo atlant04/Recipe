@@ -61,14 +61,14 @@ enum Currency: String, CaseIterable, Identifiable, CustomStringConvertible {
 class PriceSet: ObservableObject, Identifiable {
     let name: String
     let id = UUID().uuidString
-    @Published var prices: [ProductPrice]
+    @Published var prices: Set<ProductPrice>
     @Published var currency: Currency? = .rub
     
     var cancellable: AnyCancellable?
     var bag = Set<AnyCancellable>()
     internal init(name: String, prices: [ProductPrice] = [], currency: Currency? = .rub) {
         self.name = name
-        self.prices = prices
+        self.prices = Set(prices)
         self.currency = currency
         
         // this is just unacceptable, plus its leaking memory
@@ -83,7 +83,7 @@ class PriceSet: ObservableObject, Identifiable {
         .store(in: &bag)
     }
     
-    func totalPrice(for products: [RecipeProduct]) -> Double? {
+    func totalPrice(for products: Set<RecipeProduct>) -> Double? {
         var totalPrice = 0.0
         for product in products {
             guard let productPrice = self.prices.first(where: { $0.product == product.product })
@@ -109,20 +109,10 @@ extension PriceSet: Hashable {
     }
 }
 
-class ProductPrice: ObservableObject, Identifiable {
-    internal init(product: Product) {
+class ProductPrice: ObservableObject, Identifiable, ProductProvider {
+    required init(product: Product) {
         self.product = product
     }
-    
-//    internal init(product: Product) {
-//        self.product = product
-//        self.price = 0.0
-//    }
-//
-//    internal init(product: Product, price: Double) {
-//        self.product = product
-//        self.price = price
-//    }
     
     var product: Product
     var id: String = UUID().uuidString
@@ -140,9 +130,17 @@ class ProductPrice: ObservableObject, Identifiable {
 
 }
 
+extension ProductPrice: CustomStringConvertible {
+    var description: String {
+        product.description
+    }
+    
+    
+}
+
 extension ProductPrice: Hashable{
     static func == (lhs: ProductPrice, rhs: ProductPrice) -> Bool {
-        lhs.id == rhs.id 
+        lhs.product == rhs.product
     }
     
     func hash(into hasher: inout Hasher) {
@@ -181,11 +179,16 @@ final class ProductStore: ObservableObject {
             PriceSet(name: "First", prices: [
                 ProductPrice(product: productBank.randomElement()!),
                 ProductPrice(product: productBank.randomElement()!),
+                ProductPrice(product: productBank.randomElement()!),
             ]),
             PriceSet(name: "Second", prices: [
                 ProductPrice(product: productBank.randomElement()!),
+                ProductPrice(product: productBank.randomElement()!),
+                ProductPrice(product: productBank.randomElement()!),
             ]),
             PriceSet(name: "Third", prices: [
+                ProductPrice(product: productBank.randomElement()!),
+                ProductPrice(product: productBank.randomElement()!),
                 ProductPrice(product: productBank.randomElement()!),
             ]),
         ]

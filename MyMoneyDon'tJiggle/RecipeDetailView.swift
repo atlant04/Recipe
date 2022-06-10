@@ -22,17 +22,6 @@ struct RecipeDetailView: View {
         return formatter
     }
     
-    private var selectedRecipeProducts: Binding<Set<Product>> {
-        Binding {
-            Set(recipe.products.map(\.product))
-        } set: { newProducts in
-            let newRecipeProducts = newProducts.map {
-                RecipeProduct(product: $0, unit: .unit, amount: 1.0)
-            }
-            self.recipe.products = Array(Set(newRecipeProducts))
-        }
-    }
-    
     private var recipeProducts: [RecipeProduct] {
         return self.recipe.products.sorted(by: >)
     }
@@ -97,50 +86,69 @@ struct RecipeDetailView: View {
         
     }
     var body: some View {
-        ZStack(alignment: .bottomTrailing){
-            ScrollView {
-                VStack {
-                    ForEach(recipe.products) { recipeProduct in
-                        let validity = checkValidity(for: recipeProduct)
-                        VStack {
-                            RecipeProductRow(recipeProduct: recipeProduct,
-                                             focus: _focused)
+        ScrollView {
+            VStack {
+                ForEach(Array(recipe.products)) { recipeProduct in
+                    let validity = checkValidity(for: recipeProduct)
+                    VStack {
+                        RecipeProductRow(recipeProduct: recipeProduct)
+                        
+                        if validity != .valid {
+                            HStack {
+                                Image(systemName: "info.circle")
+                                    .resizable()
+                                .frame(width: 16, height: 16)
+                                Text(validity.validityDescription)
+                                Spacer()
+                            }
+                            .padding(4)
+                        }
+                    }
+                    .background(validity == .valid ? .green : .red)
+                }
+                VStack(alignment: .leading, spacing: 0){
+                    Text("Описание")
+                        .font(.title)
+                        .fontWeight(.medium)
+                    TextEditor(text: $recipe.recipeDescription)
+                        .foregroundColor(.secondary)
+                        .focused($focused)
+                        .frame(minHeight: 200)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.secondary)
                             
-                            if validity != .valid {
+                        )
+                        .toolbar {
+                            ToolbarItem(placement: .keyboard) {
                                 HStack {
-                                    Image(systemName: "info.circle")
-                                        .resizable()
-                                    .frame(width: 16, height: 16)
-                                    Text(validity.validityDescription)
                                     Spacer()
+                                    Button("Закрыть") {
+                                        self.focused = false
+                                    }
                                 }
-                                .padding(4)
                             }
                         }
-                        .background(validity == .valid ? .green : .red)
+                }
+                .padding(.horizontal)
+                RecipeDetailViewSelectorButtons(
+                    isProductSelectorShowing: $isProductSelectorShowing,
+                    showPriceSetSelection: $showPriceSetSelection,
+                    recipe: recipe
+                )
+                Spacer()
+            }
+            if let totalPrice = recipe.priceSet?.totalPrice(for: recipe.products) {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Всего: " + (formatter.string(for: totalPrice) ?? ""))
+                            .font(.largeTitle)
+                        Text("За единицу: " + (formatter.string(for: totalPrice / Double(recipe.unitsMade)) ?? ""))
+                            .font(.title2)
                     }
-                    VStack(alignment: .leading, spacing: 0){
-                        Text("Описание")
-                            .font(.title)
-                            .fontWeight(.medium)
-                        TextEditor(text: $recipe.recipeDescription)
-                            .foregroundColor(.secondary)
-                        .frame(minHeight: 200)
-                    }
-                    .padding(.horizontal)
-                    RecipeDetailViewSelectorButtons(
-                        isProductSelectorShowing: $isProductSelectorShowing,
-                        showPriceSetSelection: $showPriceSetSelection,
-                        recipe: recipe
-                    )
                     Spacer()
                 }
-            }
-            .padding(.bottom, 64)
-            if let totalPrice = recipe.priceSet?.totalPrice(for: recipe.products) {
-                Text("Всего: " + (formatter.string(for: totalPrice) ?? ""))
-                    .font(.largeTitle)
-                    .padding()
+                .padding()
             }
         }
         .sheet(isPresented: $showPriceSetSelection) {
@@ -149,11 +157,8 @@ struct RecipeDetailView: View {
         }
         .sheet(isPresented: $isProductSelectorShowing) {
             ProductSelector(allItems: store.productBank,
-                            selectedProducts: selectedRecipeProducts,
+                            selectedProducts: $recipe.products,
                             isProductSelectorShowing: $isProductSelectorShowing)
-        }
-        .onTapGesture {
-            focused = false
         }
         .navigationTitle(recipe.name)
     }
@@ -161,14 +166,12 @@ struct RecipeDetailView: View {
 
 struct RecipeProductRow: View {
     @ObservedObject var recipeProduct: RecipeProduct
-    @FocusState var focus: Bool
     
     var body: some View {
         HStack {
             Text(recipeProduct.product.name)
             Spacer()
             TextField("Кол.", value: $recipeProduct.amount, formatter: NumberFormatter())
-                .focused($focus)
                 .multilineTextAlignment(.trailing)
                 .frame(maxWidth: 80)
                 .padding(4)

@@ -21,15 +21,25 @@ enum Unit: CaseIterable, CustomStringConvertible {
     
 }
 
-class RecipeProduct: ObservableObject, Identifiable {
-    let product: Product
+class RecipeProduct: ObservableObject, Identifiable, ProductProvider, CustomStringConvertible {
+    var description: String {
+        return product.description
+    }
+    
+    var product: Product
     @Published var unit: Unit?
     @Published var amount: Double
     
     let id = UUID().uuidString
     
+    required init(product: Product) {
+        self.product = product
+        self.unit = .unit
+        self.amount = 0.0
+    }
     
-    internal init(product: Product, unit: Unit? = nil, amount: Double = 0.0) {
+    
+     init(product: Product, unit: Unit? = nil, amount: Double = 0.0) {
         self.product = product
         self.unit = unit
         self.amount = amount
@@ -50,10 +60,11 @@ extension RecipeProduct: Hashable {
 
 class Recipe: ObservableObject, Identifiable {
     var name: String
-    @Published var products: [RecipeProduct]
+    @Published var products: Set<RecipeProduct>
     let id = UUID().uuidString
     @Published var priceSet: PriceSet?
     @Published var recipeDescription: String = ""
+    @Published var unitsMade: Int = 1
     
     
     private var bag = Set<AnyCancellable>()
@@ -61,7 +72,7 @@ class Recipe: ObservableObject, Identifiable {
     
     internal init(name: String, products: [RecipeProduct] = [], priceSet: PriceSet? = nil) {
         self.name = name
-        self.products = products
+        self.products = Set(products)
         self.priceSet = priceSet
         
         // nasty, nasty workaround

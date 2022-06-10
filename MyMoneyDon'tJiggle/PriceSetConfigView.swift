@@ -12,33 +12,11 @@ struct PriceSetConfigView: View {
     @ObservedObject var priceSet: PriceSet
     
     @State private var isProductSelectorShowing = false
-    private var selectedProducts: Binding<Set<Product>> {
-        let originalSet = Set(self.priceSet.prices.map(\.product))
-        return Binding {
-            originalSet
-        } set: { newSelectedProducts in
-            let difference = originalSet.symmetricDifference(newSelectedProducts)
-            for product in difference {
-                if originalSet.contains(product) {
-                    //product was removed
-                    if let index = priceSet.prices.firstIndex(where: {
-                        $0.product == product
-                    }) {
-                        priceSet.prices.remove(at: index)
-                    }
-                } else {
-                    //product was added
-                    priceSet.prices.append(ProductPrice(product: product))
-                }
-            }
-        }
-
-    }
     
     var body: some View {
         ScrollView {
             VStack {
-                ForEach(priceSet.prices, id: \.product) { productPrice in
+                ForEach(Array(priceSet.prices), id: \.product) { productPrice in
                     ProductPriceRow(productPrice: productPrice, currency: $priceSet.currency)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal)
@@ -64,7 +42,7 @@ struct PriceSetConfigView: View {
             }
             .sheet(isPresented: $isProductSelectorShowing) {
                 ProductSelector(allItems: store.productBank,
-                                selectedProducts: selectedProducts,
+                                selectedProducts: $priceSet.prices,
                                 isProductSelectorShowing: $isProductSelectorShowing)
             }
             .navigationBarTitle(priceSet.name)
