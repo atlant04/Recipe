@@ -13,11 +13,12 @@ enum Icon: Hashable, Codable {
     case image(UIImage)
     
     func encode(to encoder: Encoder) throws {
-        
+        var container = encoder.singleValueContainer()
+        try container.encode(self)
     }
     
     init(from decoder: Decoder) throws {
-        self = .system("asd")
+        self = .system("cart")
     }
 }
 
@@ -68,7 +69,7 @@ enum Currency: String, CaseIterable, Identifiable, CustomStringConvertible, Coda
 
 class PriceSet: ObservableObject, Identifiable, Codable {
     let name: String
-    let id = UUID().uuidString
+    var id = UUID().uuidString
     @Published var prices: Set<ProductPrice>
     @Published var currency: Currency? = .rub
     
@@ -110,9 +111,16 @@ class PriceSet: ObservableObject, Identifiable, Codable {
         
     }
     
+    enum CodingKeys: String, CodingKey {
+        case name, id, prices, currency
+    }
+    
     required init(from decoder: Decoder) throws {
-        self.name = ""
-        self.prices = Set()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.prices = try container.decode(Set<ProductPrice>.self, forKey: .prices)
+        self.currency = try container.decodeIfPresent(Currency.self, forKey: .currency)
+        self.id = try container.decode(String.self, forKey: .id)
     }
 }
 
@@ -126,7 +134,7 @@ extension PriceSet: Hashable {
     }
 }
 
-class ProductPrice: ObservableObject, Identifiable, ProductProvider {
+class ProductPrice: ObservableObject, Identifiable, ProductProvider, Codable {
     required init(product: Product) {
         self.product = product
     }
@@ -143,6 +151,23 @@ class ProductPrice: ObservableObject, Identifiable, ProductProvider {
     
     var pricePerUnit: Double {
         return price / quantity
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case product, id, price, quantity, unit
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.product = try container.decode(Product.self, forKey: .product)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.quantity = try container.decode(Double.self, forKey: .quantity)
+        self.unit = try container.decode(Unit.self, forKey: .unit)
+        self.price = try container.decode(Double.self, forKey: .price)
     }
 
 }
@@ -221,7 +246,11 @@ final class ProductStore: ObservableObject, Codable {
     }
     
     func encode(to encoder: Encoder) throws {
-        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(currentCurrency, forKey: .currentCurrency)
+        try container.encode(productBank, forKey: .productBank)
+        try container.encode(priceSets, forKey: .priceSets)
+        try container.encode(recipeList, forKey: .recipeList)
     }
     
     enum CodingKeys: String, CodingKey {
@@ -235,4 +264,51 @@ final class ProductStore: ObservableObject, Codable {
         self.priceSets = try container.decode([PriceSet].self, forKey: .priceSets)
         self.recipeList = try container.decode([Recipe].self, forKey: .recipeList)
     }
+    
+    private static func fileURL() throws -> URL {
+        try FileManager.default.url(for: .documentDirectory,
+                                    in: .userDomainMask,
+                                    appropriateFor: nil,
+                                    create: false)
+        .appendingPathComponent("product_store.data")
+    }
+    
+    static func load(completion: @escaping (Result<ProductStore, Error>)->Void) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                let fileURL = try fileURL()
+                guard let file = try? FileHandle(forReadingFrom: fileURL) else {
+                    DispatchQueue.main.async {
+                        completion(.success(ProductStore()))
+                    }
+                    return
+                }
+                let dailyScrums = try JSONDecoder().decode(ProductStore.self, from: file.availableData)
+                DispatchQueue.main.async {
+                    completion(.success(dailyScrums))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    static func save(store: ProductStore, completion: @escaping (Result<Bool, Error>)->Void) {
+            DispatchQueue.global(qos: .background).async {
+                do {
+                    let data = try JSONEncoder().encode(store)
+                    let outfile = try fileURL()
+                    try data.write(to: outfile)
+                    DispatchQueue.main.async {
+                        completion(.success(true))
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                }
+            }
+        }
 }
