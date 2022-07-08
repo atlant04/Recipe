@@ -89,6 +89,11 @@ struct MyMoneyDon_tJiggleApp: App {
                         self.store.priceSets = store.priceSets
                         self.store.productBank = store.productBank
                         self.store.recipeList = store.recipeList
+                        
+                        for recipe in store.recipeList {
+                            guard let decodedPriceSet = recipe.priceSet else { continue }
+                            recipe.priceSet = store.priceSets.first(where: { $0.id == decodedPriceSet.id })
+                        }
                     case .failure(let error):
                         print(error)
                     }
